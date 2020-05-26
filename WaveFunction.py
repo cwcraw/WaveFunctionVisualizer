@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def WaveCalc(pot):
     m = 200
     x= range(m)
@@ -20,7 +21,7 @@ def WaveCalc(pot):
     elif pot == 'HO':
         # Harmonic Oscilator
         for n in range(0,m):
-            V[n] = .0001*(n-m/2+.5)**2
+            V[n] = .00001*(n-m/2+.5)**2
     elif pot == 'Open':
         for n in range(0,m):
             V[n] = 0    
@@ -41,10 +42,6 @@ def WaveCalc(pot):
             tmp_arr[n+1] = -1
         output_mat.append(tmp_arr)
 
-    # print(output_mat)
-    np.array(output_mat)
-    # print(output_mat)
-    output_mat
     E_val_1, E_vec_1 = np.linalg.eig(output_mat)
 
     for i in range(1,len(E_val_1)-2):
@@ -57,27 +54,3 @@ def WaveCalc(pot):
     # print(E_val_1/E_val_1[0])
     return E_val_1, E_vec_1, V, x
 
-# plt.axis([0,200,0,.051])
-# plt.plot(x,V)
-# plt.show()
-# plt.plot(x,E_vec_1[:,0]**2,marker='x')
-# print(E_vec_1[:,0]**2)
-# plt.show()
-# plt.plot(x,E_vec_1[:,1]**2,marker='x')
-# plt.show()
-# plt.plot(x,E_vec_1[:,2]**2,marker='x')
-# plt.show()
-# plt.plot(x,E_vec_1[:,3]**2,marker='x')
-# plt.show()
-# plt.plot(x,E_vec_1[:,4]**2,marker='x')
-# plt.show()
-# plt.plot(x,E_vec_1[:,5]**2,marker='x')
-# plt.show()
-# plt.plot(x,E_vec_1[:,6]**2,marker='x')
-# plt.show()
-# plt.plot(x,E_vec_1[:,7]**2,marker='x')
-# plt.show()
-# plt.plot(x,E_vec_1[:,8]**2,marker='x')
-# plt.show()
-# plt.plot(x,E_vec_1[:,9]**2,marker='x')
-# plt.show()
