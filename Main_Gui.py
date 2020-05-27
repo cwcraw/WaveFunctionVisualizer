@@ -10,9 +10,15 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from explanations import *
 
 # Functions
+def download_callback(val,vec):
+    np.savetxt("E_val.csv", val, delimiter=",")
+    np.savetxt("E_val_rel.csv", val/val[0], delimiter=",")
+    np.savetxt("E_vec.csv", vec, delimiter=",")
+    np.savetxt("E_vec_sq.csv", vec*vec, delimiter=",")
+
 def make_display(q_num,row_num,col_num,Vec):
     E_vec_figure = Figure(figsize=(4,4), dpi=70)
-    E_vec_plot = E_vec_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "{} Energy Level's Wave Function".format(q_num))
+    E_vec_plot = E_vec_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "Energy Level #{}'s Probablity Density".format(q_num+1))
     E_vec_plot.plot(x,Vec[:,q_num]**2)
     E_vec_canvas = FigureCanvasTkAgg(E_vec_figure, mainframe)
     E_vec_canvas.get_tk_widget().grid(row=row_num, column=col_num)
@@ -27,49 +33,26 @@ def update_display(*args):
     V_canvas = FigureCanvasTkAgg(V_figure, mainframe)
     V_canvas.get_tk_widget().grid(row=2, column=2)
 
-
-    #This Plots the first three EigenVectors
-    make_display(0,1,3,E_vec)
-    # E_vec_0_figure = Figure(figsize=(4,4), dpi=70)
-    # E_vec_0 = E_vec_0_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "1st Energy Level's Wave Function")
-    # E_vec_0.plot(x,E_vec[:,0]**2)
-    # E_vec_0_canvas = FigureCanvasTkAgg(E_vec_0_figure, mainframe)
-    # E_vec_0_canvas.get_tk_widget().grid(row=1, column=3)
-
-    E_vec_1_figure = Figure(figsize=(4,4), dpi=70)
-    E_vec_1 = E_vec_1_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "2nd Energy Level's Wave Function")
-    E_vec_1.plot(x,E_vec[:,1]**2)
-    E_vec_1_canvas = FigureCanvasTkAgg(E_vec_1_figure, mainframe)
-    E_vec_1_canvas.get_tk_widget().grid(row=2, column=3)
-
-    E_vec_2_figure = Figure(figsize=(4,4), dpi=70)
-    E_vec_2 = E_vec_2_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "3rd Energy Level's Wave Function")
-    E_vec_2.plot(x,E_vec[:,2]**2)
-    E_vec_2_canvas = FigureCanvasTkAgg(E_vec_2_figure, mainframe)
-    E_vec_2_canvas.get_tk_widget().grid(row=3, column=3)
-
-        #This Plots the 2nd  three EigenVectors
-    E_vec_3_figure = Figure(figsize=(4,4), dpi=70)
-    E_vec_3 = E_vec_3_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "1st Energy Level's Wave Function")
-    E_vec_3.plot(x,E_vec[:,3]**2)
-    E_vec_3_canvas = FigureCanvasTkAgg(E_vec_3_figure, mainframe)
-    E_vec_3_canvas.get_tk_widget().grid(row=1, column=4)
-
-    E_vec_4_figure = Figure(figsize=(4,4), dpi=70)
-    E_vec_4 = E_vec_4_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "2nd Energy Level's Wave Function")
-    E_vec_4.plot(x,E_vec[:,4]**2)
-    E_vec_4_canvas = FigureCanvasTkAgg(E_vec_4_figure, mainframe)
-    E_vec_4_canvas.get_tk_widget().grid(row=2, column=4)
-
-    E_vec_5_figure = Figure(figsize=(4,4), dpi=70)
-    E_vec_5 = E_vec_5_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "3rd Energy Level's Wave Function")
-    E_vec_5.plot(x,E_vec[:,5]**2)
-    E_vec_5_canvas = FigureCanvasTkAgg(E_vec_5_figure, mainframe)
-    E_vec_5_canvas.get_tk_widget().grid(row=3, column=4)
+    #This Plots the first 6 EigenVectors
+    if(pot_var.get() == "Particle with a Barrier"):
+        make_display(0,1,3,E_vec)
+        make_display(2,2,3,E_vec)
+        make_display(4,3,3,E_vec)
+        make_display(6,1,4,E_vec)
+        make_display(8,2,4,E_vec)
+        make_display(10,3,4,E_vec)
+    else:
+        make_display(0,1,3,E_vec)
+        make_display(1,2,3,E_vec)
+        make_display(2,3,3,E_vec)
+        make_display(3,1,4,E_vec)
+        make_display(4,2,4,E_vec)
+        make_display(5,3,4,E_vec)
 
 
 root = Tk()
 root.title("Basic Probability Densities for a particle in a box")
+
 
 #This is the main window tacked onto root
 mainframe = ttk.Frame(root, padding=" 3 3 12 12")
@@ -77,20 +60,16 @@ mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
-
+#Making the Title
+Title = Label(mainframe,anchor=W, justify=CENTER, text ="Doc Crawford's House of Wave Functions")
+Title.config(font=("Courier", 20))
+Title.grid(column=2, row=0, sticky=EW,columnspan = 2)
 
 #This is the list of available potentials and the dictionaries necessary to display them
-pot_select = ["Particle in a Box","Particle with a step potential", "Particle with a Barrier", "Particle in a Harmonic Potential", "Particle in a Morse Potential"]
-pot_dict = {"Particle in a Box":"Open","Particle with a step potential":"Box", "Particle with a Barrier":"Bar", "Particle in a Harmonic Potential":"HO", "Particle in a Morse Potential":'Morse'}
-pot_text = {"Particle in a Box":Open,"Particle with a step potential":Box, "Particle with a Barrier":Bar, "Particle in a Harmonic Potential":HO, "Particle in a Morse Potential":Morse}
+pot_select = ["Particle in a Box","Particle in a Box","Particle with a step potential", "Particle with a Barrier","Particle with a Large Barrier", "Particle in a Harmonic Potential", "Particle in a Morse Potential"]
+pot_dict = {"Particle with a Large Barrier":"HiBar","Particle in a Box":"Open","Particle with a step potential":"Box", "Particle with a Barrier":"Bar", "Particle in a Harmonic Potential":"HO", "Particle in a Morse Potential":'Morse'}
+pot_text = {"Particle with a Large Barrier":HiBar,"Particle in a Box":Open,"Particle with a step potential":Box, "Particle with a Barrier":Bar, "Particle in a Harmonic Potential":HO, "Particle in a Morse Potential":Morse}
 
-#This is the potential selector, added to the grid at the bottom to allow for extra padding
-pot_var = StringVar(root)
-pot_selector = ttk.OptionMenu(mainframe, pot_var, *pot_select, )
-pot_var.trace("w",update_display)
-
-# #This is the submit button, added to the grid at the bottom to allow for extra padding
-# submit_button = Button(mainframe,text="Calculate Wavefunctions")
 
 #This is the call to the Wavefunction . . . function
 E_val, E_vec, V, x = WaveCalc("Open")
@@ -103,26 +82,22 @@ V_canvas = FigureCanvasTkAgg(V_figure, mainframe)
 V_canvas.get_tk_widget().grid(row=2, column=2)
 
 
-#This Plots the first three EigenVectors
-E_vec_0_figure = Figure(figsize=(4,4), dpi=70)
-E_vec_0 = E_vec_0_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "1st Energy Level's Wave Function")
-E_vec_0.plot(x,E_vec[:,0]**2)
-E_vec_0_canvas = FigureCanvasTkAgg(E_vec_0_figure, mainframe)
-E_vec_0_canvas.get_tk_widget().grid(row=1, column=3)
-
-E_vec_1_figure = Figure(figsize=(4,4), dpi=70)
-E_vec_1 = E_vec_1_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "2nd Energy Level's Wave Function")
-E_vec_1.plot(x,E_vec[:,1]**2)
-E_vec_1_canvas = FigureCanvasTkAgg(E_vec_1_figure, mainframe)
-E_vec_1_canvas.get_tk_widget().grid(row=2, column=3)
-
-E_vec_2_figure = Figure(figsize=(4,4), dpi=70)
-E_vec_2 = E_vec_2_figure.add_subplot(1, 1, 1, xlabel = 'Position', title = "3rd Energy Level's Wave Function")
-E_vec_2.plot(x,E_vec[:,2]**2)
-E_vec_2_canvas = FigureCanvasTkAgg(E_vec_2_figure, mainframe)
-E_vec_2_canvas.get_tk_widget().grid(row=3, column=3)
+#This Plots the first six EigenVectors
+make_display(0,1,3,E_vec)
+make_display(1,2,3,E_vec)
+make_display(2,3,3,E_vec)
+make_display(3,1,4,E_vec)
+make_display(4,2,4,E_vec)
+make_display(5,3,4,E_vec)
 
 
+#This is the potential selector, added to the grid at the bottom to allow for extra padding
+pot_var = StringVar(root)
+pot_selector = ttk.OptionMenu(mainframe, pot_var, *pot_select, )
+pot_var.trace("w",update_display)
+
+# #This is the download button, added to the grid at the bottom to allow for extra padding
+download_button = Button(mainframe,text="Export Data", command = download_callback(E_val, E_vec))
 
 #This is the Upper text
 upper_text = Label(mainframe,anchor=W, justify=LEFT, wraplength=500, text = header_text)
@@ -134,12 +109,17 @@ lower_text = Label(mainframe,anchor=W, justify=LEFT, wraplength=500)
 lower_text.grid(column=1, row=3, sticky=W,columnspan = 2)
 lower_text.configure(text="The selected item is {}".format(Open))
 
+#this is the download text
+download_text = Label(mainframe,anchor=W, justify=LEFT, wraplength=200)
+
 # padding all the widgets added so far
 for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
 
 # padding the buttons after padding everything else to make it look nice.
-# submit_button.grid(column=1,row=2, sticky=S,pady=100)
-pot_selector.grid(column=1,row=2, sticky=N,pady=100)
+pot_selector.grid(column=1,row=2, sticky=N)
+download_button.grid(column=1,row=2, sticky=N,pady=50)
+download_text.grid(column=1, row=2, sticky=S,columnspan = 1)
+download_text.configure(text=export_text)
 
 # Making the GUI
 root.mainloop()

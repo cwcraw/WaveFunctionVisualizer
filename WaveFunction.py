@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def WaveCalc(pot):
     m = 200
     x= range(m)
@@ -11,9 +10,13 @@ def WaveCalc(pot):
         for n in range(0,m):
             V[n] = .01*(1-(2.718)**(-.1*(n/4-10)))**2
     elif pot == 'Bar':
-        # rectangular barrier high energy
+        # rectangular barrier  
         for n in range(80,120):
             V[n] = .1
+    elif pot == 'HiBar':
+        # rectangular barrier high energy
+        for n in range(80,120):
+            V[n] = 10
     elif pot == 'Box':
         # Change in pot
         for n in range(100,200):
@@ -51,6 +54,5 @@ def WaveCalc(pot):
                 for k in range(0,len(E_val_1)):
                     E_vec_1[k,j], E_vec_1[k,j+1] = E_vec_1[k,j+1], E_vec_1[k,j]
 
-    # print(E_val_1/E_val_1[0])
     return E_val_1, E_vec_1, V, x
 
