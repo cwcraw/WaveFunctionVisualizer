@@ -11,6 +11,7 @@ matplotlib.use("TkAgg")
 
 # Functions
 
+
 def download_callback(val, vec):
     np.savetxt("E_val.csv", val, delimiter=",")
     np.savetxt("E_val_rel.csv", val/val[0], delimiter=",")
@@ -93,14 +94,13 @@ V_canvas = FigureCanvasTkAgg(V_figure, mainframe)
 V_canvas.get_tk_widget().grid(row=2, column=2)
 
 
-
 # This Plots the first six EigenVectors
-E_vec_canvas_1 = make_display(0, 1, 3, E_vec) 
-E_vec_canvas_2 = make_display(1, 2, 3, E_vec) 
-E_vec_canvas_3 = make_display(2, 3, 3, E_vec)  
-E_vec_canvas_4 = make_display(3, 1, 4, E_vec)  
-E_vec_canvas_5 = make_display(4, 2, 4, E_vec)  
-E_vec_canvas_6 = make_display(5, 3, 4, E_vec)  
+E_vec_canvas_1 = make_display(0, 1, 3, E_vec)
+E_vec_canvas_2 = make_display(1, 2, 3, E_vec)
+E_vec_canvas_3 = make_display(2, 3, 3, E_vec)
+E_vec_canvas_4 = make_display(3, 1, 4, E_vec)
+E_vec_canvas_5 = make_display(4, 2, 4, E_vec)
+E_vec_canvas_6 = make_display(5, 3, 4, E_vec)
 
 
 # This is the potential selector, added to the grid at the bottom to allow for extra padding
