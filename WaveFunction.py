@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 
 def WaveCalc(pot):
+    # Defining basic parameters for the potential of the wave function
     m = 200
     x = range(m)
     V = [0]*m
@@ -26,12 +27,20 @@ def WaveCalc(pot):
         # Harmonic Oscilator
         for n in range(0, m):
             V[n] = .00001*(n-m/2+.5)**2
+    # The next two are a bit redundant and probably can be refactored
     elif pot == 'Open':
         for n in range(0, m):
+            V[n] = 0
+    else:
+        for n in range(0, m): 
             V[n] = 0
 
     tmp_arr = []
     output_mat = []
+    # Creating the Hamiltonian operator, a matrix.
+    # The Hamiltonian is 2nd derivative of the wavefunction (times a constant) plus the potential.
+    # Here I'm using a finite difference method to form the Hamiltonian. 
+    # The first two cases are the first and final row of the matrix, while the third case is the body of the matrix
     for n in range(0, m):
         tmp_arr = [0]*m
         if n == 0:
@@ -45,9 +54,10 @@ def WaveCalc(pot):
             tmp_arr[n] = 2+V[n]
             tmp_arr[n+1] = -1
         output_mat.append(tmp_arr)
-
+    # Here numpy makes our life easy by finding the eigenvalues and vectors. We will display the eigenvectors in our gui
     E_val_1, E_vec_1 = np.linalg.eig(output_mat)
-
+    # Here numpy makes our life difficult by return the eigenvalues & vectors unsorted.
+    # I use a simple bubble sort to sort the values and vectors together. I would like to refactor this to make it more efficient.
     for i in range(1, len(E_val_1)-2):
         for j in range(0, len(E_val_1)-i):
             if (E_val_1[j] > E_val_1[j+1]):
